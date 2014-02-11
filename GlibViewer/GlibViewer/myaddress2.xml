@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<node id="Top">
+        <node id="system_1" address="0x00000001" mask="0xff000000"/>
+        <node id="system_2" address="0x00000001" mask="0x00ff0000"/>
+        <node id="system_3" address="0x00000001" mask="0x0000ff00"/>
+        <node id="system_4" address="0x00000001" mask="0x000000ff"/>
+
+        <node id="board_1" address="0x00000000" mask="0xff000000"/>
+        <node id="board_2" address="0x00000000" mask="0x00ff0000"/>
+        <node id="board_3" address="0x00000000" mask="0x0000ff00"/>
+        <node id="board_4" address="0x00000000" mask="0x000000ff"/>
+
+        <node id="firmware_1" address="0x00000002" mask="0xf0000000"/>
+        <node id="firmware_2" address="0x00000002" mask="0x0f000000"/>
+        <node id="firmware_3" address="0x00000002" mask="0x00ff0000"/>
+        <node id="firmware_4" address="0x00000002" mask="0x0000fe00"/>
+	<node id="firmware_5" address="0x00000002" mask="0x000001e0"/>
+        <node id="firmware_6" address="0x00000002" mask="0x0000001f"/>
+</node>
+
