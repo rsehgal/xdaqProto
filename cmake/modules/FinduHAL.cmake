@@ -1,5 +1,5 @@
-# - Finds Vc installation ( the wrapper library to SIMD intrinsics )
-# This module sets up Vc information 
+# - Finds uHAL installation ( the library to access uTCA based systems )
+# This module sets up uHAL information 
 # It defines:
 # uHAL_FOUND          If the ROOT is found
 # uHAL_INCLUDE_DIR    PATH to the include directory
