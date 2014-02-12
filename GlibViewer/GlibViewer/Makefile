@@ -9,7 +9,8 @@ Package=GlibViewer
 
 Sources= GlibViewer.cc version.cc
 
-GLIB_ROOT = /home/rasehgal/XDAQ/UHAL-CMAKE/GLIB
+#GLIB_ROOT = /home/rasehgal/XDAQ/UHAL-CMAKE/GLIB
+GLIB_ROOT = /home/rasehgal/mylibraries
 IncludeDirs = \
 	$(GLIB_ROOT)/include \
 	$(CACTUSCORE)/uhal/tests/include \
@@ -24,7 +25,9 @@ LibraryDirs = \
 	$(GLIB_ROOT)/lib 
 
 UserDynamicLinkFlags = \
-	-lglib
+#	-lglib
+
+ExternalObjects = $(LibraryPaths) -lglib
 
 DynamicLibrary=GlibViewer
 
