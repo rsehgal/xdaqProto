@@ -1,4 +1,3 @@
-export uHALROOT=/home/rasehgal/cactus
 mkdir build 
 cd build
 cmake ..
