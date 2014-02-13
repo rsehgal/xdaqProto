@@ -23,10 +23,10 @@ using namespace uhal;
 
 class GLIB
 {
-    //ConnectionManager *manager;
+    ConnectionManager *manager;
     //HwInterface hw;
     //ValWord< uint32_t > mem;
-
+    std::string uhalConnectionFile;	
     std::string _boardName;
     std::string _systemName;
     std::string _firmWareDate;
@@ -41,13 +41,14 @@ class GLIB
 public:
     GLIB();
     ~GLIB();	
-    //GLIB(char *fileName);
+    GLIB(std::string fileName);
 
 public:
     //Core Function to fill DataMembers
     void FetchBoardName();
     void FetchSystemName();
     void FetchFirmWare();
+    void FetchSystemName2();
     
     void test(); 
 

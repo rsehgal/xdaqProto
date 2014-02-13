@@ -4,12 +4,21 @@
 
 //Just to create single instance of ConnectionManager and HwInterface
 //Require singleton implementation.
-ConnectionManager *manager=new ConnectionManager("file://myconnections.xml");
-HwInterface hw=manager->getDevice ( "dummy.udp.0" );
+//std::string uhalConnectionFile;
+//ConnectionManager *manager=new ConnectionManager(uhalConnectionFile);
+//HwInterface hw=manager->getDevice ( "dummy.udp.0" );
 
 GLIB::GLIB(){
 //manager=new ConnectionManager("file://myconnections.xml");
 //hw=manager->getDevice ( "dummy.udp.0" );
+//uhalConnectionFile="file://myconnections.xml";
+}
+
+GLIB::GLIB(std::string filename){
+uhalConnectionFile=filename;
+//uhalConnectionFile.append(filename);
+std::cout<<"Connectionfile : "<<uhalConnectionFile<<std::endl;
+manager=new ConnectionManager(uhalConnectionFile);
 }
 
 GLIB::~GLIB(){
@@ -56,6 +65,7 @@ std::string GLIB::GetFirmwareDetails()
 
 void GLIB::FetchFirmWare()
 {
+HwInterface hw=manager->getDevice ( "dummy.udp.0" );
 ValWord< uint32_t > mem;
 char regName[12];
 for(int i=1 ; i<=6 ; i++)
@@ -111,7 +121,7 @@ _firmWareDate.append(strDate);
 
 void GLIB::FetchBoardName()
 {
-//HwInterface hw=manager->getDevice ( "dummy.udp.0" );
+HwInterface hw=manager->getDevice ( "dummy.udp.0" );
 ValWord< uint32_t > mem;
 //std::stringstream ss;
 char regName[12];
@@ -138,7 +148,7 @@ _boardName.append(s);
 
 void GLIB::FetchSystemName()
 {
-//HwInterface hw=manager->getDevice ( "dummy.udp.0" );
+HwInterface hw=manager->getDevice ( "dummy.udp.0" );
 ValWord< uint32_t > mem;
 //std::stringstream ss;
 char regName[12];
@@ -160,6 +170,18 @@ _systemName.append(s);
 }
 //std::cout<<std::endl;
 
+}
+
+void GLIB::FetchSystemName2()
+{
+HwInterface hw=manager->getDevice ( "dummy.udp.0" );
+std::vector<std::string> nodeString=hw.getNodes();
+std::cout<<"==================================================="<<std::endl;
+for (std::vector<std::string>::iterator it = nodeString.begin(); it != nodeString.end(); ++it)
+ { if(hw.getNode(*it).getAddress()==2)
+   // std::cout<<hw.getNode(*it).getAddress()<<std::endl;
+   std::cout<<std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getAddress()<<std::endl;	 
+ }
 }
 
 //Added later
