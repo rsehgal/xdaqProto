@@ -252,3 +252,23 @@ std::cout<<std::endl;
 std::cout<<"End of Test function"<<std::endl;
 }
 
+void GLIB::writeTest(std::string regName)
+{
+HwInterface hw=manager->getDevice ( "dummy.udp.0" );
+int val=24;
+std::string buffer="0x12";
+my_itoa(val,buffer,16);
+hw.getNode(regName).write(val);
+hw.dispatch();
+}
+
+void GLIB::my_itoa(int value, std::string& buf, int base){
+
+        int i = 30;
+
+        buf = "";
+
+        for(; value && i ; --i, value /= base) buf = "0123456789abcdef"[value % base] + buf;
+
+}
+

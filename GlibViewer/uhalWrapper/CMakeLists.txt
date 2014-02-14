@@ -16,7 +16,11 @@ set(LIBS -lpthread -lboost_thread -lboost_filesystem -lboost_regex -lboost_syste
 
 #set(LIBS -lcactus_uhal_uhal)
 
-add_library(glib SHARED inc/glib.h src/glib.cpp)
+file(GLOB testsources tests/*.cpp)
+file(GLOB headers ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h)
+file(GLOB libsources src/*.cpp)
+
+add_library(glib SHARED ${headers} ${libsources})
 target_link_libraries(glib "-L ${uHAL_LIBRARY_DIR} ${LIBS}")
 
 message(STATUS "=======================================================")
@@ -24,8 +28,9 @@ message(STATUS "Please set your LD_LIBRARY_PATH env variable as" )
 message(STATUS "export LD_LIBRARY_PATH=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}:$LD_LIBRARY_PATH")
 message(STATUS "=======================================================")
 
-add_executable(system tests/system.cpp)
-target_link_libraries(system "-L ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} -lglib")
+foreach( test  ${testsources} )
+        get_filename_component( TESTEXEC  ${test} NAME_WE)
+        add_executable(${TESTEXEC} ${test})
+        target_link_libraries(${TESTEXEC} "-L ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} -lglib")
+endforeach( test  )
 
-add_executable(sturdy tests/sturdy.cpp)
-target_link_libraries(sturdy "-L ${uHAL_LIBRARY_DIR} ${LIBS}")

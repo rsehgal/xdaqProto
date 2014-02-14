@@ -66,6 +66,9 @@ public:
 
 //#HELPER functions
 
+public:
+   void my_itoa(int value, std::string& buf, int base);
+   void writeTest(std::string regName);
 };
 
 #endif // GLIB_H

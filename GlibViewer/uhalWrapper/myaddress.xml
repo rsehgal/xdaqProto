@@ -16,5 +16,7 @@
         <node id="firmware_REG_4" address="0x00000002" mask="0x0000fe00"/>
 	<node id="firmware_REG_5" address="0x00000002" mask="0x000001e0"/>
         <node id="firmware_REG_6" address="0x00000002" mask="0x0000001f"/>
+
+	<node id="test_REG" address="0x00000003" mask="0xffffffff"/>
 </node>
 
