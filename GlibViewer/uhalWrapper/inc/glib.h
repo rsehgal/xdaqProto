@@ -63,12 +63,12 @@ public:
     std::string GetMask(unsigned int val);
     std::string ToHexString(unsigned int val);
     std::string GetRegisName();
-
+    int HexStringToInt(std::string hexString);	
 //#HELPER functions
 
 public:
    void my_itoa(int value, std::string& buf, int base);
-   void writeTest(std::string regName);
+   void writeTest(std::string regName,int val);
 };
 
 #endif // GLIB_H

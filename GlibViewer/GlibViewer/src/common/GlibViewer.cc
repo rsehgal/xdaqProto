@@ -13,6 +13,9 @@
 #include "xdata/UnsignedLong.h"
 #include "xdata/String.h"
 #include "glib.h"
+#include "sstream"
+
+using namespace cgicc;
 
 ConnectionManager *manager=new ConnectionManager("file://myconnections.xml");
 HwInterface hw=manager->getDevice ( "dummy.udp.0" );
@@ -30,6 +33,8 @@ GlibViewer::GlibViewer::GlibViewer(xdaq::ApplicationStub * s)
  xgi::bind(this,&GlibViewer::insertBoards,"insertBoards");
  xgi::bind(this,&GlibViewer::ChangeBoard,"ChangeBoard");
  xgi::bind(this,&GlibViewer::NodesInfo,"NodesInfo");
+ xgi::bind(this,&GlibViewer::MyNodes,"MyNodes");
+ xgi::bind(this,&GlibViewer::setParameter,"setParameter");
 }
 
 void GlibViewer::GlibViewer::Default(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception)
@@ -60,7 +65,7 @@ void GlibViewer::GlibViewer::BasicGLIBInfo(xgi::Input * in, xgi::Output * out )
 {
   *out << cgicc::HTMLDoctype(cgicc::HTMLDoctype::eStrict) << std::endl;
   *out << cgicc::html().set("lang", "en").set("dir","ltr") << std::endl;
-  GLIB obj;
+  GLIB obj("file://myconnections.xml");
   *out << cgicc::title("GLIB Supervisor Page") << std::endl;
   *out << cgicc::body()<<std::endl;
   *out << cgicc::b(obj.GetSystemDetails()) << std::endl;
@@ -73,6 +78,15 @@ void GlibViewer::GlibViewer::BasicGLIBInfo(xgi::Input * in, xgi::Output * out )
   *out << cgicc::html() << std::endl;
 }
 
+int GlibViewer::GlibViewer::HexStringToInt(std::string hexString)
+{
+   std::stringstream sstr;
+   sstr << hexString;
+   sstr << std::hex;
+   int f;
+   sstr >> f;
+   return f;
+}
 
 void GlibViewer::GlibViewer::showRegisTable(xgi::Input * in, xgi::Output * out )
   throw (xgi::exception::Exception)
@@ -111,6 +125,32 @@ void GlibViewer::GlibViewer::insertBoards(xgi::Input * in, xgi::Output * out ) t
 *out<< cgicc::html();
 }
 
+void GlibViewer::GlibViewer::MyNodes(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception)
+{
+*out << cgicc::HTMLDoctype(cgicc::HTMLDoctype::eStrict) << std::endl;
+        *out << cgicc::html().set("lang", "en").set("dir","ltr") << std::endl;
+        *out << cgicc::head(cgicc::title("GLIB Page")) << std::endl;
+        *out << cgicc::body() <<std::endl;
+
+*out<<"Hello Raman"<<std::endl;
+*out << cgicc::body();
+*out<< cgicc::html();
+
+}
+
+
+void GlibViewer::GlibViewer::setParameter(xgi::Input * in, xgi::Output * out )
+  throw (xgi::exception::Exception)
+{
+GLIB obj("file://myconnections.xml");
+cgicc::Cgicc cgi(in);
+std::string regname = cgi["regname"]->getValue();
+std::string hexString=cgi["value"]->getValue();
+int val=HexStringToInt(hexString);
+obj.writeTest(regname,val);
+*out << "Set Parameter Called with : "<<regname<<" : "<<hexString<<std::endl;
+}
+
 void GlibViewer::GlibViewer::NodesInfo(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception)
 {
 *out << cgicc::HTMLDoctype(cgicc::HTMLDoctype::eStrict) << std::endl;
@@ -118,11 +158,9 @@ void GlibViewer::GlibViewer::NodesInfo(xgi::Input * in, xgi::Output * out ) thro
         *out << cgicc::head(cgicc::title("GLIB Page")) << std::endl;
         *out << cgicc::body() <<std::endl;
 int clr=0;
-/*
-*out<<"<center><hr/>";
-*out<<"<h3>Info for Board : "<<strBoard.toString()<<"</h3>";
-*out<<"<hr/>";
-*/
+std::string method = toolbox::toString("/%s/setParameter",getApplicationDescriptor()->getURN().c_str());
+//method.append("?regname=udpppp");
+
 cgicc::Cgicc cgi(in);
 strBoard = cgi["connection"]->getValue();
 //hw=manager->getDevice ( "dummy.udp.0" );
@@ -132,7 +170,9 @@ strBoard = cgi["connection"]->getValue();
 
 hw=manager->getDevice (strBoard.toString());
 std::vector<std::string> nodeString=hw.getNodes();
-*out<<"<table border=2>";
+//*out<<"<table border=2>";
+*out<<table().set("border","0");
+//std::cout<<"REACH"<<std::endl;
 for (std::vector<std::string>::iterator it = nodeString.begin(); it != nodeString.end(); ++it)
  { clr++;
   std::cout << ' ' << *it<<"  :: 0x"<<std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getAddress()<<"  ::  0x"<< std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getMask()<<"  ::  ";//<<hw.getNode(*it).read()<<std::endl;
@@ -140,18 +180,33 @@ for (std::vector<std::string>::iterator it = nodeString.begin(); it != nodeStrin
    hw.dispatch();
   std::cout<<reg.value()<<std::endl;
 
-  //For Web
-  //For textbox
-  //cgicc::input().set("type","text").set("name","value").set("value", myParameter_.toString());
-   if(clr%2)
-    *out<<"<tr bgcolor='#E5E4E2'>";
-   else
-    *out<<"<tr bgcolor='#E0FFFF'>";
-    
-    *out<<"<td>"<<*it<<"</td><td>0x"<<std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getAddress()<<"</td><td>0x"<<std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getMask()<<"</td><td>"<<"<input type=text value=0x"<<std::hex<<std::setfill('0')<<std::setw(8)<<reg.value()<<" name="<< strBoard.toString()<<" id="<<strBoard.toString() <<"></td></tr>";
+
+//CREATING FORMS 
+std::string hexPref="0x";
+std::stringstream addStr,maskStr,valueStr;
+addStr<<std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getAddress();
+std::string hexAddStr="0x";hexAddStr.append(addStr.str());
+maskStr<<std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getMask();
+std::string hexMaskStr="0x";hexMaskStr.append(maskStr.str());
+valueStr<<std::hex<<std::setfill('0')<<std::setw(8)<<reg.value();
+std::string hexValueStr="0x"; hexValueStr.append(valueStr.str());
+*out<< cgicc::form().set("method","GET").set("action", method) << std::endl;    
+*out<<tr()
+    <<td(input().set("type","text").set("name","regname").set("value",*it))
+    <<td(input().set("type","text").set("name","address").set("value",hexAddStr))
+    <<td(input().set("type","text").set("name","mask").set("value",hexMaskStr))
+    <<td(input().set("type","text").set("name","value").set("value",hexValueStr))
+    <<td(input().set("type","submit").set("value","Set")) 
+    <<tr()<<std::endl;
+
+*out << cgicc::form() << std::endl;
+
 }
 //  std::cout << '\n';
-*out<<"</table></center>";
+//*out<<"</table></center>";
+table();
+
+*out<< "<a href='NodesInfo?connection=dummy.udp.0'>Refresh</a>" << std::endl;
 *out << cgicc::body();
 *out<< cgicc::html();
 

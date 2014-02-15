@@ -1,7 +1,7 @@
 #include "glib.h"
 #include <sstream>
 #include <string>
-
+#include <sstream>
 //Just to create single instance of ConnectionManager and HwInterface
 //Require singleton implementation.
 //std::string uhalConnectionFile;
@@ -12,6 +12,7 @@ GLIB::GLIB(){
 //manager=new ConnectionManager("file://myconnections.xml");
 //hw=manager->getDevice ( "dummy.udp.0" );
 //uhalConnectionFile="file://myconnections.xml";
+//manager=new ConnectionManager("file://myconnections.xml");
 }
 
 GLIB::GLIB(std::string filename){
@@ -252,10 +253,10 @@ std::cout<<std::endl;
 std::cout<<"End of Test function"<<std::endl;
 }
 
-void GLIB::writeTest(std::string regName)
+void GLIB::writeTest(std::string regName,int val)
 {
 HwInterface hw=manager->getDevice ( "dummy.udp.0" );
-int val=24;
+//int val=24;
 std::string buffer="0x12";
 my_itoa(val,buffer,16);
 hw.getNode(regName).write(val);
@@ -272,3 +273,13 @@ void GLIB::my_itoa(int value, std::string& buf, int base){
 
 }
 
+
+int GLIB::HexStringToInt(std::string hexString)
+{
+   std::stringstream sstr;
+   sstr << hexString;
+   sstr << std::hex;
+   int f;
+   sstr >> f;
+   return f;
+}

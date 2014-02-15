@@ -37,8 +37,11 @@ class GlibViewer: public xdaq::Application
 //    void GetValues(xgi::Input * in, xgi::Output * out )throw (xgi::exception::Exception);	
     void insertBoards(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception);		
      void ChangeBoard(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception);
-     void NodesInfo(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception);
 
+     void NodesInfo(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception);
+     void MyNodes(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception);
+	void setParameter(xgi::Input * in, xgi::Output * out )throw (xgi::exception::Exception);
+     int HexStringToInt(std::string hexString);
 private:
 	void loadHtmlValues();
 
