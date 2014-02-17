@@ -35,6 +35,9 @@ GlibViewer::GlibViewer::GlibViewer(xdaq::ApplicationStub * s)
  xgi::bind(this,&GlibViewer::NodesInfo,"NodesInfo");
  xgi::bind(this,&GlibViewer::MyNodes,"MyNodes");
  xgi::bind(this,&GlibViewer::setParameter,"setParameter");
+ xgi::bind(this,&GlibViewer::jqueryTest,"jqueryTest");
+
+
 }
 
 void GlibViewer::GlibViewer::Default(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception)
@@ -229,3 +232,33 @@ void GlibViewer::GlibViewer::ChangeBoard(xgi::Input * in, xgi::Output * out )thr
         Default(in, out);
 */
 }
+
+
+void GlibViewer::GlibViewer::jqueryTest(xgi::Input * in, xgi::Output * out )throw (xgi::exception::Exception)
+{
+*out << cgicc::HTMLDoctype(cgicc::HTMLDoctype::eStrict) << std::endl;
+        *out << cgicc::html().set("lang", "en").set("dir","ltr") << std::endl;
+        *out << cgicc::head(cgicc::title("GLIB Page")) << std::endl;
+
+//    *out<<"<head>";
+
+//    *out<<"<script src=\"/js/jquery-1.8.3.js\"></script>" << std::endl;
+//    *out <<"<script src=\"/js/test.js\" type=\"text/javascript\"></script>" << std::endl;
+
+    *out<<cgicc::script().set("type", "text/javascript").set("src", "/js/jquery-1.8.3.js")<<cgicc::script()<<std::endl;
+    *out<<cgicc::script().set("type", "text/javascript").set("src", "/js/test.js")<<cgicc::script()<<std::endl;
+
+//    *out << "</head>";
+    *out << head(); // end head section
+
+
+    // Body
+    *out << body().set("style", "font-size:12px;");
+    *out << h2() << "CGICC and jQuery Demonstration" << h2();
+    *out << cgicc::div().set("id","div1")<< "Sample" <<cgicc::div()<<std::endl;
+    *out << cgicc::button().set("type","button").set("id","btn1")<<"Click"<<cgicc::button()<<std::endl;
+    *out<<body();
+    *out<<html();
+
+}
+

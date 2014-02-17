@@ -42,6 +42,8 @@ class GlibViewer: public xdaq::Application
      void MyNodes(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception);
 	void setParameter(xgi::Input * in, xgi::Output * out )throw (xgi::exception::Exception);
      int HexStringToInt(std::string hexString);
+
+     void jqueryTest(xgi::Input * in, xgi::Output * out )throw (xgi::exception::Exception);	
 private:
 	void loadHtmlValues();
 
