@@ -1,0 +1,16 @@
+<!-- Sample Xml file -->
+<xc:Partition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xc="http://xdaq.web.cern.ch/xdaq/xsd/2004/XMLConfiguration-30">
+
+  <!-- Declare a context that contain applcation -->
+  <xc:Context url="http://193.190.246.249:1972">
+  <!-- Declare of  application -->
+     <xc:Application class="myPPackage::myPPackage" id="15" instance="0" network="local"/>
+		
+    <!-- Shared object library that contains the Hello inplementation -->		
+    <xc:Module>/home/rasehgal/XDaqAppCreator/myPProj/myPPackage/lib/linux/x86_64_slc/libmyPPackage.so</xc:Module>
+
+  </xc:Context>
+
+</xc:Partition>

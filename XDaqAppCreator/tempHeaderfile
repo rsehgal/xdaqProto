@@ -1,0 +1,33 @@
+#ifndef _packageName_className_h_
+#define _packageName_className_h_
+
+#include "xdaq/Application.h"
+#include "xgi/Method.h"
+#include "xgi/Utils.h"
+#include "xdata/String.h"
+#include "xdata/UnsignedLong.h"
+
+namespace packageName {
+class className: public xdaq::Application
+{
+  protected:
+    //Define your data members here
+
+  public:
+
+    XDAQ_INSTANTIATOR();
+
+    className(xdaq::ApplicationStub * s)
+      throw (xdaq::exception::Exception);
+
+    //Default function to execute on application loading
+    void Default(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception); 
+    
+    //Other function for the application  
+    void Test(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception);
+
+
+};
+}
+
+#endif

@@ -1,0 +1,37 @@
+#How to use xdaqAppCreator
+1. Within this directory run the bootStrap.sh script
+   > sh bootStrap.sh
+
+2. Above step will create a env.sh file in the same directory.
+
+3. Now source the env.sh file
+   > source env.sh
+
+4. Run the main   xdaqAppCreator.sh script from any directory.
+   with following arguements "ProjectName" and "PackageName"
+   > sh xdaqAppCreator.sh TestProj TestApp
+
+5. Step 4 will create a XDAQ project with Project Name as "TestProj" and Package Name as "TestApp"
+   which you can compile. It will come with simple default functionality.
+
+#Compiling the XDAQ project created using above steps
+
+6. The project is created with a default Makefile which is sufficient enough to compile the default
+   project. For compiling just do make
+   > make
+
+7. Thats all, your default project is compiled and ready to get loaded in hyperdaq
+
+#Loading the project in the hyperdaq
+
+8. The Default project is having a sample xml file in the xml folder which can
+   be used to load the application in hyperdaq by using following
+   > xdaq.sh -c xml/<packageName>.xml
+
+9. If everything goes well, then the application will be loaded in hyperdaq and one
+   can access it using web browser by visiting following URL:
+   http://<you-web-server-name>:1972    
+  
+
+
+NOTE : 1972 is the default port that XDAQ is using, If required then, one can change this port   

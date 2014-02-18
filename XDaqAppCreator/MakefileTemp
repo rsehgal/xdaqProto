@@ -1,0 +1,14 @@
+BUILD_HOME:=$(shell pwd)/../..
+
+include $(XDAQ_ROOT)/config/mfAutoconf.rules
+include $(XDAQ_ROOT)/config/mfDefs.$(XDAQ_OS)
+
+Project=projectName
+Package=packageName
+
+Sources= className.cc version.cc
+
+DynamicLibrary=packageName
+
+include $(XDAQ_ROOT)/config/Makefile.rules
+include $(XDAQ_ROOT)/config/mfRPM.rules

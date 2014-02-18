@@ -1,0 +1,6 @@
+LFLAGS = $(CACTUSCORE)/uhal/log/lib $(CACTUSCORE)/uhal/grammars/lib $(CACTUSCORE)/uhal/uhal/lib $(CACTUSCORE)/extern/boost/RPMBUILD/SOURCES/lib $(CACTUSCORE)/extern/pugixml/RPMBUILD/SOURCES/lib /home/rasehgal/XDAQ/GLIB 
+
+
+LIBS = -lpthread -lboost_thread -lboost_filesystem -lboost_regex -lboost_system -lboost_thread -lboost_program_options -lcactus_extern_pugixml -lcactus_uhal_log -lcactus_uhal_grammars -lcactus_uhal_uhal -lglib
+
+INCLUDES = $(CACTUSCORE)/uhal/tests/include $(CACTUSCORE)/uhal/log/include $(CACTUSCORE)/uhal/grammars/include $(CACTUSCORE)/extern/boost/RPMBUILD/SOURCES/include $(CACTUSCORE)/extern/pugixml/RPMBUILD/SOURCES/include $(CACTUSCORE)/uhal/uhal/include /home/rasehgal/XDAQ/GLIB/include

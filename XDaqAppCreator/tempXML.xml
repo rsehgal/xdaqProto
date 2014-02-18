@@ -1,0 +1,15 @@
+<xc:Partition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xc="http://xdaq.web.cern.ch/xdaq/xsd/2004/XMLConfiguration-30">
+
+  <!-- Declare a context that contain applcation -->
+  <xc:Context url="http://193.190.246.249:1972">
+  <!-- Declare of  application -->
+     <xc:Application class="packageName::className" id="15" instance="0" network="local"/>
+		
+    <!-- Shared object library that contains the Hello inplementation -->		
+    <xc:Module>libdir/linux/platform/libpackageName.so</xc:Module>
+
+  </xc:Context>
+
+</xc:Partition>

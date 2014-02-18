@@ -1,0 +1,9 @@
+#depending upon your installation path set CACTUSCORE environment variable 
+LFLAGS = -L$(CACTUSCORE)/uhal/log/lib -L$(CACTUSCORE)/uhal/grammars/lib -L$(CACTUSCORE)/uhal/uhal/lib -L$(CACTUSCORE)/extern/boost/RPMBUILD/SOURCES/lib -L$(CACTUSCORE)/extern/pugixml/RPMBUILD/SOURCES/lib -L/home/rasehgal/XDAQ/GLIB 
+
+
+LIBS = -lpthread -lboost_thread -lboost_filesystem -lboost_regex -lboost_system -lboost_thread -lboost_program_options -lcactus_extern_pugixml -lcactus_uhal_log -lcactus_uhal_grammars -lcactus_uhal_uhal -lglib
+
+LD_PRELOAD=/home/rasehgal/XDAQ/GLIB/libglib.so
+
+INCLUDES = -I$(CACTUSCORE)/uhal/tests/include -I$(CACTUSCORE)/uhal/log/include -I$(CACTUSCORE)/uhal/grammars/include -I$(CACTUSCORE)/extern/boost/RPMBUILD/SOURCES/include -I$(CACTUSCORE)/extern/pugixml/RPMBUILD/SOURCES/include -I$(CACTUSCORE)/uhal/uhal/include -I/home/rasehgal/XDAQ/GLIB/include

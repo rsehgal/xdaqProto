@@ -1,0 +1,47 @@
+#include "cgicc/CgiDefs.h"
+#include "cgicc/Cgicc.h"
+#include "cgicc/HTTPHTMLHeader.h"
+#include "cgicc/HTMLClasses.h"
+#include <iostream>
+#include <string.h>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include "packageName/className.h"
+#include "xdata/UnsignedLong.h"
+
+XDAQ_INSTANTIATOR_IMPL(packageName::className)
+
+packageName::className::className(xdaq::ApplicationStub * s)
+  throw (xdaq::exception::Exception): xdaq::Application(s)
+{
+//  LOG4CPLUS_INFO(this->getApplicationLogger(),"Hello !"); 
+ xgi::bind(this,&className::Default, "Default");
+ xgi::bind(this,&className::Test, "Test");
+}
+
+void packageName::className::Default(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception)
+{
+ *out << cgicc::HTMLDoctype(cgicc::HTMLDoctype::eStrict) << std::endl;
+  *out << cgicc::html().set("lang", "en").set("dir","ltr") << std::endl;
+  *out << cgicc::title("Test Simple Web") << std::endl;
+  *out << cgicc::body()<<std::endl;
+  *out << cgicc::b("This is default functionality....") << std::endl;
+  *out << cgicc::body() << std::endl;
+  *out << cgicc::html() << std::endl;
+}
+
+void packageName::className::Test(xgi::Input * in, xgi::Output * out )
+  throw (xgi::exception::Exception)
+{
+  *out << cgicc::HTMLDoctype(cgicc::HTMLDoctype::eStrict) << std::endl;
+  *out << cgicc::html().set("lang", "en").set("dir","ltr") << std::endl;
+  *out << cgicc::title("Test Simple Web") << std::endl;
+  *out << cgicc::body()<<std::endl;
+  *out << cgicc::b("Hello there...") << std::endl;
+  *out << cgicc::body() << std::endl;
+  *out << cgicc::html() << std::endl;
+}
+
+
