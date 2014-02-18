@@ -244,7 +244,12 @@ strBoard = cgi["connection"]->getValue();
 
 hw=manager->getDevice (strBoard.toString());
 std::vector<std::string> nodeString=hw.getNodes();
-*out<<table().set("border","0");
+
+//Hidden field to send URN descriptor
+*out<< input().set("type","hidden").set("id","urnId").set("value",method)<<std::endl;
+
+//*out<<table().set("border","0");
+*out<< "<table border=0>"<<std::endl;
 for (std::vector<std::string>::iterator it = nodeString.begin(); it != nodeString.end(); ++it)
  { clr++;
   std::cout << ' ' << *it<<"  :: 0x"<<std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getAddress()<<"  ::  0x"<< std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getMask()<<"  ::  ";//<<hw.getNode(*it).read()<<std::endl;
@@ -287,9 +292,9 @@ std::string divId="div_";  divId.append(suff);
 
 }
 //  std::cout << '\n';
-//*out<<"</table></center>";
-table();
-
+*out<<"</table></center>";
+//table();
+//*out<<"</center>";
 *out<< "<a href='NodesInfo?connection=dummy.udp.0'>Refresh</a>" << std::endl;
 *out << cgicc::body();
 *out<< cgicc::html();
