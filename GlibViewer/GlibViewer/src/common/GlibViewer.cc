@@ -36,8 +36,7 @@ GlibViewer::GlibViewer::GlibViewer(xdaq::ApplicationStub * s)
  xgi::bind(this,&GlibViewer::MyNodes,"MyNodes");
  xgi::bind(this,&GlibViewer::setParameter,"setParameter");
  xgi::bind(this,&GlibViewer::jqueryTest,"jqueryTest");
-
-
+ xgi::bind(this,&GlibViewer::Reload,"Reload");
 }
 
 void GlibViewer::GlibViewer::Default(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception)
@@ -145,16 +144,23 @@ void GlibViewer::GlibViewer::MyNodes(xgi::Input * in, xgi::Output * out ) throw 
 void GlibViewer::GlibViewer::setParameter(xgi::Input * in, xgi::Output * out )
   throw (xgi::exception::Exception)
 {
+
 GLIB obj("file://myconnections.xml");
 cgicc::Cgicc cgi(in);
 std::string regname = cgi["regname"]->getValue();
 std::string hexString=cgi["value"]->getValue();
 int val=HexStringToInt(hexString);
 obj.writeTest(regname,val);
-*out << "Set Parameter Called with : "<<regname<<" : "<<hexString<<std::endl;
+
+
+//*out << "Hello Raman"<<std::endl;
+
+//*out << "Set Parameter Called with : "<<regname<<" : "<<hexString<<std::endl;
+//Reload(in,out);
 }
 
-void GlibViewer::GlibViewer::NodesInfo(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception)
+
+void GlibViewer::GlibViewer::Reload(xgi::Input * in,xgi::Output * out ) throw (xgi::exception::Exception)
 {
 *out << cgicc::HTMLDoctype(cgicc::HTMLDoctype::eStrict) << std::endl;
         *out << cgicc::html().set("lang", "en").set("dir","ltr") << std::endl;
@@ -162,11 +168,7 @@ void GlibViewer::GlibViewer::NodesInfo(xgi::Input * in, xgi::Output * out ) thro
         *out << cgicc::body() <<std::endl;
 int clr=0;
 std::string method = toolbox::toString("/%s/setParameter",getApplicationDescriptor()->getURN().c_str());
-//method.append("?regname=udpppp");
 
-cgicc::Cgicc cgi(in);
-strBoard = cgi["connection"]->getValue();
-//hw=manager->getDevice ( "dummy.udp.0" );
 *out<<"<center><hr/>";
 *out<<"<h3>Info for Board : "<<strBoard.toString()<<"</h3>";
 *out<<"<hr/>";
@@ -184,6 +186,73 @@ for (std::vector<std::string>::iterator it = nodeString.begin(); it != nodeStrin
   std::cout<<reg.value()<<std::endl;
 
 
+//CREATING FORMS
+std::string hexPref="0x";
+std::stringstream addStr,maskStr,valueStr;
+addStr<<std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getAddress();
+std::string hexAddStr="0x";hexAddStr.append(addStr.str());
+maskStr<<std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getMask();
+std::string hexMaskStr="0x";hexMaskStr.append(maskStr.str());
+valueStr<<std::hex<<std::setfill('0')<<std::setw(8)<<reg.value();
+std::string hexValueStr="0x"; hexValueStr.append(valueStr.str());
+//*out<< cgicc::form().set("method","GET").set("action", method) << std::endl;
+*out<<tr()
+    <<td(input().set("type","text").set("name","regname").set("value",*it))
+    <<td(input().set("type","text").set("name","address").set("value",hexAddStr))
+    <<td(input().set("type","text").set("name","mask").set("value",hexMaskStr))
+    <<td(input().set("type","text").set("name","value").set("value",hexValueStr))
+    <<td(input().set("type","submit").set("value","Set"))
+    <<tr()<<std::endl;
+
+//*out << cgicc::form() << std::endl;
+
+}
+//  std::cout << '\n';
+//*out<<"</table></center>";
+table();
+
+*out<< "<a href='NodesInfo?connection=dummy.udp.0'>Refresh</a>" << std::endl;
+*out << cgicc::body();
+*out<< cgicc::html();
+
+}
+
+
+void GlibViewer::GlibViewer::NodesInfo(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception)
+{
+*out << cgicc::HTMLDoctype(cgicc::HTMLDoctype::eStrict) << std::endl;
+        *out << cgicc::html().set("lang", "en").set("dir","ltr") << std::endl;
+//       *out << cgicc::head(cgicc::title("GLIB Page")) << std::endl;
+
+*out<<"<head>";
+*out<<cgicc::script().set("type", "text/javascript").set("src", "/js/jquery-1.8.3.js")<<cgicc::script()<<std::endl;
+*out<<cgicc::script().set("type", "text/javascript").set("src", "/js/test.js")<<cgicc::script()<<std::endl;
+*out<<cgicc::script().set("type", "text/javascript").set("src", "/js/jquery.form.js")<<cgicc::script()<<std::endl;
+*out << "</head>";
+
+*out << cgicc::body() <<std::endl;
+int clr=0;
+std::string method = toolbox::toString("/%s/setParameter",getApplicationDescriptor()->getURN().c_str());
+//method.append("?regname=udpppp");
+
+cgicc::Cgicc cgi(in);
+strBoard = cgi["connection"]->getValue();
+//hw=manager->getDevice ( "dummy.udp.0" );
+*out<<"<center><hr/>";
+*out<<"<h3>Info for Board : "<<strBoard.toString()<<"</h3>";
+*out<<"<hr/>";
+
+hw=manager->getDevice (strBoard.toString());
+std::vector<std::string> nodeString=hw.getNodes();
+*out<<table().set("border","0");
+for (std::vector<std::string>::iterator it = nodeString.begin(); it != nodeString.end(); ++it)
+ { clr++;
+  std::cout << ' ' << *it<<"  :: 0x"<<std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getAddress()<<"  ::  0x"<< std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getMask()<<"  ::  ";//<<hw.getNode(*it).read()<<std::endl;
+   uhal::ValWord< uint32_t > reg = hw.getNode (*it).read();
+   hw.dispatch();
+  std::cout<<reg.value()<<std::endl;
+
+
 //CREATING FORMS 
 std::string hexPref="0x";
 std::stringstream addStr,maskStr,valueStr;
@@ -193,16 +262,28 @@ maskStr<<std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getMask();
 std::string hexMaskStr="0x";hexMaskStr.append(maskStr.str());
 valueStr<<std::hex<<std::setfill('0')<<std::setw(8)<<reg.value();
 std::string hexValueStr="0x"; hexValueStr.append(valueStr.str());
-*out<< cgicc::form().set("method","GET").set("action", method) << std::endl;    
-*out<<tr()
-    <<td(input().set("type","text").set("name","regname").set("value",*it))
-    <<td(input().set("type","text").set("name","address").set("value",hexAddStr))
-    <<td(input().set("type","text").set("name","mask").set("value",hexMaskStr))
-    <<td(input().set("type","text").set("name","value").set("value",hexValueStr))
-    <<td(input().set("type","submit").set("value","Set")) 
+
+std::string suff=(*it);
+std::string regTextId="regname_";  regTextId.append(suff);
+std::string addTextId="address_";  addTextId.append(suff);
+std::string maskTextId="mask_";  maskTextId.append(suff);
+std::string valueTextId="value_";  valueTextId.append(suff);
+std::string btnId=(*it);
+std::string divId="div_";  divId.append(suff);
+
+
+//*out<< cgicc::form().set("id","myform").set("method","POST").set("action", method) << std::endl;    
+*out<<tr() //.set("bgcolor","yellow")
+    <<td(input().set("type","text").set("name","regname").set("value",*it).set("id",regTextId))
+    <<td(input().set("type","text").set("name","address").set("value",hexAddStr).set("id",addTextId))
+    <<td(input().set("type","text").set("name","mask").set("value",hexMaskStr).set("id",maskTextId))
+    <<td(input().set("type","text").set("name","value").set("value",hexValueStr).set("id",valueTextId))
+//    <<td(input().set("type","submit").set("id","setButton").set("value","Set")) 
+    <<td(cgicc::button("Click").set("type","button").set("id",btnId).set("class","setBtn"))
+    <<td(cgicc::div().set("id",divId))
     <<tr()<<std::endl;
 
-*out << cgicc::form() << std::endl;
+//*out << cgicc::form() << std::endl;
 
 }
 //  std::cout << '\n';
@@ -233,32 +314,30 @@ void GlibViewer::GlibViewer::ChangeBoard(xgi::Input * in, xgi::Output * out )thr
 */
 }
 
-
-void GlibViewer::GlibViewer::jqueryTest(xgi::Input * in, xgi::Output * out )throw (xgi::exception::Exception)
+void GlibViewer::GlibViewer::jqueryTest(xgi::Input * in, xgi::Output * out )throw (xgi::exception::Exception) 
 {
 *out << cgicc::HTMLDoctype(cgicc::HTMLDoctype::eStrict) << std::endl;
         *out << cgicc::html().set("lang", "en").set("dir","ltr") << std::endl;
-        *out << cgicc::head(cgicc::title("GLIB Page")) << std::endl;
+    //    *out << cgicc::head(cgicc::title("GLIB Page")) << std::endl;
 
-//    *out<<"<head>";
-
+    *out<<"<head>";
+   
 //    *out<<"<script src=\"/js/jquery-1.8.3.js\"></script>" << std::endl;
 //    *out <<"<script src=\"/js/test.js\" type=\"text/javascript\"></script>" << std::endl;
 
     *out<<cgicc::script().set("type", "text/javascript").set("src", "/js/jquery-1.8.3.js")<<cgicc::script()<<std::endl;
     *out<<cgicc::script().set("type", "text/javascript").set("src", "/js/test.js")<<cgicc::script()<<std::endl;
 
-//    *out << "</head>";
-    *out << head(); // end head section
+    *out << "</head>";
+//    *out << head(); // end head section
 
 
     // Body
     *out << body().set("style", "font-size:12px;");
-    *out << h2() << "CGICC and jQuery Demonstration" << h2();
-    *out << cgicc::div().set("id","div1")<< "Sample" <<cgicc::div()<<std::endl;
+    *out << h2() << "CGICC and jQuery Demonstration" << h2();	
+    *out << cgicc::div().set("id","div1")<< "Sample" <<cgicc::div()<<std::endl; 
     *out << cgicc::button().set("type","button").set("id","btn1")<<"Click"<<cgicc::button()<<std::endl;
     *out<<body();
-    *out<<html();
+    *out<<html(); 
 
 }
-
