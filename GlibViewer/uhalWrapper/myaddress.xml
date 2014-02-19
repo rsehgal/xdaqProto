@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <node id="Top">
+
+        <node id="system" address="0x00000001" mask="0xffffffff"/>
+
         <node id="system_REG_1" address="0x00000001" mask="0xff000000"/>
         <node id="system_REG_2" address="0x00000001" mask="0x00ff0000"/>
         <node id="system_REG_3" address="0x00000001" mask="0x0000ff00"/>
@@ -16,7 +19,13 @@
         <node id="firmware_REG_4" address="0x00000002" mask="0x0000fe00"/>
 	<node id="firmware_REG_5" address="0x00000002" mask="0x000001e0"/>
         <node id="firmware_REG_6" address="0x00000002" mask="0x0000001f"/>
-
+	
 	<node id="test_REG" address="0x00000003" mask="0xffffffff"/>
+
+	<node id="i2c_settings"      address="0x0000000d"  mask="0xffffffff"  permission="rw"/>
+
+  	<node id="i2c_command"       address="0x0000000e"  mask="0xffffffff"  permission="rw"/>
+ 
+  	<node id="i2c_reply"           address="0x0000000f"  mask="0xffffffff"  permission="r"/>
 </node>
 

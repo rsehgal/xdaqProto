@@ -9,34 +9,38 @@
 //HwInterface hw=manager->getDevice ( "dummy.udp.0" );
 
 GLIB::GLIB(){
-//manager=new ConnectionManager("file://myconnections.xml");
-//hw=manager->getDevice ( "dummy.udp.0" );
-//uhalConnectionFile="file://myconnections.xml";
-//manager=new ConnectionManager("file://myconnections.xml");
+uhalConnectionFile="file://";
+uhalConnectionFile.append("myconnections.xml");
+manager=new ConnectionManager(uhalConnectionFile);
+_boardName="dummy.udp.0";
+
 }
 
 GLIB::GLIB(std::string filename){
-uhalConnectionFile=filename;
-//uhalConnectionFile.append(filename);
+uhalConnectionFile="file://";
+uhalConnectionFile.append(filename);
+std::cout<<"Connectionfile : "<<uhalConnectionFile<<std::endl;
+manager=new ConnectionManager(uhalConnectionFile);
+_boardName="dummy.udp.0";
+}
+
+GLIB::GLIB(std::string connFileName,std::string boardName){
+uhalConnectionFile="file://";
+uhalConnectionFile.append(connFileName);
+_boardName=boardName;
 std::cout<<"Connectionfile : "<<uhalConnectionFile<<std::endl;
 manager=new ConnectionManager(uhalConnectionFile);
 }
 
+
 GLIB::~GLIB(){
 }
 
-/*
-GLIB::GLIB(char *connectionFile)
-{
-//    manager = new ConnectionManager(connectionFile);
-//    hw = manager->getDevice("dummy.udp.0");
-}
-*/
 
 std::string GLIB::GetBoardDetails()
 {
     FetchBoardName();	
-    return _boardName;
+    return _board;
 }
 
 
@@ -66,7 +70,7 @@ std::string GLIB::GetFirmwareDetails()
 
 void GLIB::FetchFirmWare()
 {
-HwInterface hw=manager->getDevice ( "dummy.udp.0" );
+HwInterface hw=manager->getDevice ( _boardName );
 ValWord< uint32_t > mem;
 char regName[12];
 for(int i=1 ; i<=6 ; i++)
@@ -122,7 +126,7 @@ _firmWareDate.append(strDate);
 
 void GLIB::FetchBoardName()
 {
-HwInterface hw=manager->getDevice ( "dummy.udp.0" );
+HwInterface hw=manager->getDevice ( _boardName );
 ValWord< uint32_t > mem;
 //std::stringstream ss;
 char regName[12];
@@ -140,16 +144,41 @@ char c = char(mem.value());
 ss << c;
 ss >> s;
 //std::cout<<s;
-_boardName.append(s);
+_board.append(s);
 //std::cout <<  char(mem.value());
 }
 //std::cout<<std::endl;
 
 }
 
+void GLIB::FetchSystem(std::string system)
+{
+HwInterface hw=manager->getDevice ( _boardName );
+ValWord< uint32_t > mem;
+mem = hw.getNode ( system ).read();
+hw.dispatch();
+//std::cout<<ToHexString(mem.value())<<std::endl;
+std::string hexString=ToHexString(mem.value());
+int sys=HexStringToInt(hexString);
+int sysMask[4]={HexStringToInt("0x000000ff"),HexStringToInt("0x0000ff00"),HexStringToInt("0x00ff0000"),HexStringToInt("0xff000000")};
+int andVal=0;
+std::stringstream ss;
+std::string s;
+
+for(int i=3;i>=0;i--)
+{
+andVal=(sys & sysMask[i]);
+char c=char(andVal >> 24);
+ss << c;
+ss >> s;
+_systemName.append(s);
+}
+std::cout<<"System Name is : "<<_systemName<<std::endl;
+}
+
 void GLIB::FetchSystemName()
 {
-HwInterface hw=manager->getDevice ( "dummy.udp.0" );
+HwInterface hw=manager->getDevice ( _boardName );
 ValWord< uint32_t > mem;
 //std::stringstream ss;
 char regName[12];
@@ -175,7 +204,7 @@ _systemName.append(s);
 
 void GLIB::FetchSystemName2()
 {
-HwInterface hw=manager->getDevice ( "dummy.udp.0" );
+HwInterface hw=manager->getDevice ( _boardName );
 std::vector<std::string> nodeString=hw.getNodes();
 std::cout<<"==================================================="<<std::endl;
 for (std::vector<std::string>::iterator it = nodeString.begin(); it != nodeString.end(); ++it)
@@ -209,7 +238,7 @@ void GLIB::test()
 {
 //ConnectionManager manager ( "file://myconnections.xml" );
 //manager=new ConnectionManager("file://myconnections.xml");
-HwInterface hw=manager->getDevice ( "dummy.udp.0" );
+HwInterface hw=manager->getDevice ( _boardName );
 ValWord< uint32_t > mem;
 int i=0; //,j=0;
 
@@ -255,7 +284,7 @@ std::cout<<"End of Test function"<<std::endl;
 
 void GLIB::writeTest(std::string regName,int val)
 {
-HwInterface hw=manager->getDevice ( "dummy.udp.0" );
+HwInterface hw=manager->getDevice ( _boardName );
 //int val=24;
 std::string buffer="0x12";
 my_itoa(val,buffer,16);

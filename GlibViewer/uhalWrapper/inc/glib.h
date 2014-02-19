@@ -27,7 +27,8 @@ class GLIB
     //HwInterface hw;
     //ValWord< uint32_t > mem;
     std::string uhalConnectionFile;	
-    std::string _boardName;
+    std::string _boardName; //dummy.udp.0
+    std::string _board; //GLIB
     std::string _systemName;
     std::string _firmWareDate;
     std::string _firmWareVersion;
@@ -42,14 +43,14 @@ public:
     GLIB();
     ~GLIB();	
     GLIB(std::string fileName);
-
+    GLIB(std::string connFileName,std::string boardName);
 public:
     //Core Function to fill DataMembers
     void FetchBoardName();
     void FetchSystemName();
     void FetchFirmWare();
     void FetchSystemName2();
-    
+    void FetchSystem(std::string);     
     void test(); 
 
 //Member functions for users
