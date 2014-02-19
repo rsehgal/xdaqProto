@@ -145,7 +145,7 @@ void GlibViewer::GlibViewer::setParameter(xgi::Input * in, xgi::Output * out )
   throw (xgi::exception::Exception)
 {
 
-GLIB obj("file://myconnections.xml");
+GLIB obj("myconnections.xml","dummy.udp.0");
 cgicc::Cgicc cgi(in);
 std::string regname = cgi["regname"]->getValue();
 std::string hexString=cgi["value"]->getValue();
@@ -255,8 +255,9 @@ for (std::vector<std::string>::iterator it = nodeString.begin(); it != nodeStrin
   std::cout << ' ' << *it<<"  :: 0x"<<std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getAddress()<<"  ::  0x"<< std::hex<<std::setfill('0')<<std::setw(8)<<hw.getNode(*it).getMask()<<"  ::  ";//<<hw.getNode(*it).read()<<std::endl;
    uhal::ValWord< uint32_t > reg = hw.getNode (*it).read();
    hw.dispatch();
-  std::cout<<reg.value()<<std::endl;
+  std::cout<<reg.value()<<" permission : "<<hw.getNode(*it).getPermission()<<std::endl;
 
+int permission=hw.getNode(*it).getPermission();
 
 //CREATING FORMS 
 std::string hexPref="0x";
@@ -282,9 +283,12 @@ std::string divId="div_";  divId.append(suff);
     <<td(input().set("type","text").set("name","regname").set("value",*it).set("id",regTextId))
     <<td(input().set("type","text").set("name","address").set("value",hexAddStr).set("id",addTextId))
     <<td(input().set("type","text").set("name","mask").set("value",hexMaskStr).set("id",maskTextId))
-    <<td(input().set("type","text").set("name","value").set("value",hexValueStr).set("id",valueTextId))
+    <<td(input().set("type","text").set("name","value").set("value",hexValueStr).set("id",valueTextId));
 //    <<td(input().set("type","submit").set("id","setButton").set("value","Set")) 
-    <<td(cgicc::button("Click").set("type","button").set("id",btnId).set("class","setBtn"))
+if(permission==1)
+*out << "<td><button type=\"button\" id=\""<< btnId <<"\" class=\"setBtn\" disabled>Set</button></td>";
+else
+*out <<td(cgicc::button("Set").set("type","button").set("id",btnId).set("class","setBtn"))
     <<td(cgicc::div().set("id",divId))
     <<tr()<<std::endl;
 
