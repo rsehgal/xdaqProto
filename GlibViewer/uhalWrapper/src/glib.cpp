@@ -162,13 +162,14 @@ std::string hexString=ToHexString(mem.value());
 int sys=HexStringToInt(hexString);
 int sysMask[4]={HexStringToInt("0x000000ff"),HexStringToInt("0x0000ff00"),HexStringToInt("0x00ff0000"),HexStringToInt("0xff000000")};
 int andVal=0;
-std::stringstream ss;
-std::string s;
-
+int bitsToShift=0;
 for(int i=3;i>=0;i--)
 {
+bitsToShift=8*i;
 andVal=(sys & sysMask[i]);
-char c=char(andVal >> 24);
+char c=char(andVal >> bitsToShift);
+std::stringstream ss;
+std::string s;
 ss << c;
 ss >> s;
 _systemName.append(s);
