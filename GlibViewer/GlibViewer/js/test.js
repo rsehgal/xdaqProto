@@ -1,6 +1,11 @@
  $(document).ready(function()
 {
 alert("doucment loaded");
+//Disabling textboxes at DOM loading
+$(".regnameText").attr("readonly",true);
+$(".addressText").attr("readonly",true);
+$(".maskText").attr("readonly",true);
+
 $("#btn1").click(function(){
   $("#div1").text("Hello world!");
 });
@@ -29,6 +34,7 @@ url : $(urnId).val(),
 data : dataString,
 processData: false,
 success : function(result,stat){
+//$(divId).set("bgcolor","yellow");
 $(divId).text("Value set").fadeOut(2000);
 }
 });

@@ -67,7 +67,7 @@ void GlibViewer::GlibViewer::BasicGLIBInfo(xgi::Input * in, xgi::Output * out )
 {
   *out << cgicc::HTMLDoctype(cgicc::HTMLDoctype::eStrict) << std::endl;
   *out << cgicc::html().set("lang", "en").set("dir","ltr") << std::endl;
-  GLIB obj("file://myconnections.xml");
+  GLIB obj("myconnections.xml","dummy.udp.0");
   *out << cgicc::title("GLIB Supervisor Page") << std::endl;
   *out << cgicc::body()<<std::endl;
   *out << cgicc::b(obj.GetSystemDetails()) << std::endl;
@@ -279,19 +279,28 @@ std::string divId="div_";  divId.append(suff);
 
 
 //*out<< cgicc::form().set("id","myform").set("method","POST").set("action", method) << std::endl;    
-*out<<tr() //.set("bgcolor","yellow")
-    <<td(input().set("type","text").set("name","regname").set("value",*it).set("id",regTextId))
-    <<td(input().set("type","text").set("name","address").set("value",hexAddStr).set("id",addTextId))
-    <<td(input().set("type","text").set("name","mask").set("value",hexMaskStr).set("id",maskTextId))
-    <<td(input().set("type","text").set("name","value").set("value",hexValueStr).set("id",valueTextId));
+if(permission==1)
+*out<<tr().set("bgcolor","red");
+else
+*out<<tr().set("bgcolor","green");
+
+*out  <<td(input().set("type","text").set("name","regname").set("value",*it).set("id",regTextId).set("class","regnameText"))
+    <<td(input().set("type","text").set("name","address").set("value",hexAddStr).set("id",addTextId).set("class","addressText"))
+    <<td(input().set("type","text").set("name","mask").set("value",hexMaskStr).set("id",maskTextId).set("class","maskText"));
+//    <<td(input().set("type","text").set("name","value").set("value",hexValueStr).set("id",valueTextId).set("readonly","readonly"));
 //    <<td(input().set("type","submit").set("id","setButton").set("value","Set")) 
 if(permission==1)
+{*out<<td(input().set("type","text").set("name","value").set("value",hexValueStr).set("id",valueTextId).set("readonly","readonly"));
 *out << "<td><button type=\"button\" id=\""<< btnId <<"\" class=\"setBtn\" disabled>Set</button></td>";
+*out<<tr();
+}
 else
+{
+*out<<td(input().set("type","text").set("name","value").set("value",hexValueStr).set("id",valueTextId));
 *out <<td(cgicc::button("Set").set("type","button").set("id",btnId).set("class","setBtn"))
     <<td(cgicc::div().set("id",divId))
     <<tr()<<std::endl;
-
+}
 //*out << cgicc::form() << std::endl;
 
 }
