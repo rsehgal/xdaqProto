@@ -26,7 +26,8 @@ class ChipProp
     public:
 	ChipProp();
 	void SetChipId();
-	void SetChipId(std::string chidId);
+	void SetChipId(std::string chipId);
+	void SetChipId(uint32_t chipId);
 	std::string GetChipId();
 	void SetChipName();
 	void SetChipName(std::string name);

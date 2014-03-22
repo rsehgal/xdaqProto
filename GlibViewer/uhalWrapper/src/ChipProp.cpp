@@ -24,12 +24,17 @@ void ChipProp::SetChipId(std::string chipId){
 _chipId=chipId;
 }
 
+void SetChipId(uint32_t chipId){
+_chipId=ConvertInt(chipId);
+}
+
 std::string ChipProp::GetChipId(){
 return _chipId;
 }
 
 void ChipProp::SetChipName(){
 _name.append(ConvertInt(_col));
+_name.append("_");
 _name.append(ConvertInt(_row));
 
 }

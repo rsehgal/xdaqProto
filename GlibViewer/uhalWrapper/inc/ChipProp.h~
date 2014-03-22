@@ -1,5 +1,6 @@
 /* A Class to Store Chip Properties
 ** Author : Raman Sehgal
+** email : raman.sehgal@cern.ch
 */
 #ifndef CHIPPROP_H
 #define CHIPPROP_H

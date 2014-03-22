@@ -27,10 +27,23 @@ class VFAT
     std::string uhalConnectionFile;	
     ChipProp chip;
 
+    //VFAT Registers
+    uint8_t _ContReg0;
+    uint8_t _ContReg1;
+    uint8_t _ChipID0;
+    uint8_t _ChipID1;
+
 public:
     VFAT();
     ~VFAT();	
     VFAT(std::string fileName);
+    void GotoRunMode();
+    void GotoSleepMode();
+
+    void GetChipId();
+    void DetectChipId();
+    void SetChipName();
+    std::string GetChipName()
 
 public:
 //Core Function to fill DataMembers
